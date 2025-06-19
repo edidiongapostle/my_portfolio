@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}About Me{% endblock %}
+
+{% block content %}
+<div class="bg-white dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            <h2 class="text-base text-indigo-600 dark:text-indigo-400 font-semibold tracking-wide uppercase">About</h2>
+            <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                A Little More About Me
+            </p>
+        </div>
+
+        <div class="mt-12 lg:flex lg:items-center lg:gap-x-12">
+            <div class="lg:w-1/3 flex justify-center mb-8 lg:mb-0">
+                <img class="h-48 w-48 rounded-full object-cover shadow-lg" src="https://via.placeholder.com/192" alt="Profile picture">
+            </div>
+            <div class="lg:w-2/3">
+                <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Hello! I'm a passionate and creative web developer with a love for building beautiful, intuitive, and high-performing web applications. My journey into tech started with a fascination for how things work, and it has since grown into a full-fledged passion for software development.
+                </p>
+                <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    I specialize in backend development with Django and have a strong foundation in frontend technologies like HTML, CSS, and JavaScript. I'm always eager to learn new things and take on challenging projects that push my skills to the next level.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-16">
+            <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white text-center">My Skills</h3>
+            <div class="mt-8 flex justify-center flex-wrap gap-4">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Django</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">HTML5 & CSS3</span>
+                <span class="skill-tag">SQL</span>
+                <span class="skill-tag">Git & GitHub</span>
+                <span class="skill-tag">REST APIs</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

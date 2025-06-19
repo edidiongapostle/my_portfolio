@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white dark:bg-gray-800 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+            {% if post.category %}
+            <a href="{% url 'blog_list' %}?category={{ post.category.slug }}" class="text-base text-indigo-600 dark:text-indigo-400 font-semibold tracking-wide uppercase">{{ post.category.name }}</a>
+            {% endif %}
+            <h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                {{ post.title }}
+            </h1>
+            <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
+                By {{ post.author.username }} on {{ post.published_date|date:"F d, Y" }}
+            </p>
+        </div>
+
+        <div class="mt-12 lg:flex lg:gap-x-12">
+            <!-- Post Content -->
+            <div class="lg:w-2/3 prose prose-indigo prose-lg text-gray-600 dark:text-gray-300 mx-auto">
+                {{ post.body|linebreaks }}
+            </div>
+
+            <!-- Sidebar with Tags -->
+            {% if post.tags.all %}
+            <div class="mt-12 lg:mt-0 lg:w-1/3">
+                <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white text-center">Tags</h2>
+                    <div class="mt-4 flex justify-center flex-wrap gap-2">
+                        {% for tag in post.tags.all %}
+                            <a href="{% url 'blog_list' %}?tag={{ tag.slug }}" class="inline-block bg-gray-200 dark:bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500">#{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Back Button -->
+        <div class="mt-12 text-center">
+            <a href="{% url 'blog_list' %}" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                &larr; Back to Blog
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

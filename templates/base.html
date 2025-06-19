@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Portfolio{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        /* Preloader Styles */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            overflow: hidden;
+            transition: opacity 0.75s, visibility 0.75s;
+        }
+
+        .preloader-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .bird {
+            position: absolute;
+            will-change: transform;
+            animation: flap 0.8s ease-in-out infinite alternate;
+        }
+
+        .bird-svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .bird-body {
+            fill: #6366f1; /* Indigo */
+        }
+
+        .dark .bird-body {
+            fill: #818cf8; /* Indigo-400 */
+        }
+
+        @keyframes flap {
+            from {
+                transform: translateY(0px);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Creative Button Styles */
+        .btn-creative {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-creative:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4), 0 6px 6px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-creative:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-creative::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-creative:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0) translate(-50%, -50%);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(20, 20) translate(-50%, -50%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+
+    <div id="preloader" class="preloader bg-white dark:bg-gray-900">
+        <!-- Birds are injected here by JavaScript -->
+    </div>
+
+    <nav class="bg-gray-800 text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="font-bold text-xl">MyPortfolio</a>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="{% url 'index' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if request.path == '/' %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Home</a>
+                            <a href="{% url 'project_list' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'projects' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Projects</a>
+                            <a href="{% url 'blog_list' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'blog' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Blog</a>
+                            <a href="{% url 'about' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'about' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">About</a>
+                            <a href="{% url 'contact' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'contact' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.121-3.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM3.05 4.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zm.001 10.928a1 1 0 011.414 0l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM16 10a1 1 0 01-1-1h-1a1 1 0 110-2h1a1 1 0 011 1z"></path></svg>
+                    </button>
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden ml-2">
+                        <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="{% url 'index' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.path == '/' %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Home</a>
+                <a href="{% url 'project_list' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'projects' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Projects</a>
+                <a href="{% url 'blog_list' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'blog' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Blog</a>
+                <a href="{% url 'about' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'about' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">About</a>
+                <a href="{% url 'contact' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'contact' in request.path %}bg-gray-900 text-white dark:bg-gray-700{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2024 Your Name. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+                <a href="#" class="text-gray-400 hover:text-white">LinkedIn</a>
+                <a href="#" class="text-gray-400 hover:text-white">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Preloader Script
+        const preloader = document.getElementById('preloader');
+
+        function createBirds() {
+            const birdCount = 20;
+            const birdSvg = `<svg class="bird-svg" viewBox="0 0 70.6 49.3"><path class="bird-body" d="M70.6 18.9c-1.4-2.3-3.8-3.9-6.3-4.5-3.3-.8-6.8.2-9.5 2.1-2.9 2-4.7 5.2-5.3 8.7-.5 3.5.2 7 1.9 10 1.2 2.1 3 3.8 5.2 4.8 2.5 1.2 5.3 1.3 7.9.6 3.3-.9 6-3.2 7.6-6.1.4-.8.7-1.6.8-2.5.2-1.3-.1-2.7-.8-3.8-1.1-1.9-2.9-3.2-5-3.8-2.3-.7-4.8-.5-7 .6-2.5 1.2-4.5 3.3-5.6 5.8-.4.9-.6 1.9-.6 2.9 0 1.3.4 2.6 1.2 3.7 1.1 1.5 2.8 2.4 4.6 2.6 2.1.2 4.2-.5 5.8-1.8 2-1.6 3.2-4 3.4-6.5.1-1.2 0-2.5-.5-3.6zM0 13.1c1.3-1.5 3.1-2.4 5-2.6 2.1-.2 4.2.5 5.8 1.8 2 1.6 3.2 4 3.4 6.5.1 1.2 0 2.5-.5 3.6-1.1 2.5-3.1 4.6-5.6 5.8-2.2 1.1-4.7 1.3-7 .6-2.1-.7-4-2-5-3.8-1.4-2.4-1.9-5.2-1.4-7.9.6-3.1 2.4-5.7 5-7.4 2.5-1.6 5.5-2.1 8.4-1.4 2.9.7 5.4 2.5 7.1 5 .4.6.7 1.2.9 1.9.3 1.1.2 2.3-.3 3.3-1 1.9-2.7 3.2-4.7 3.8-2.2.7-4.6.4-6.6-.7-2.3-1.2-4-3.2-4.9-5.5-.3-.8-.5-1.7-.4-2.6.1-1.2.6-2.4 1.4-3.4z"/></svg>`;
+            
+            for (let i = 0; i < birdCount; i++) {
+                const bird = document.createElement('div');
+                bird.className = 'bird';
+                bird.innerHTML = birdSvg;
+
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+
+                bird.style.top = `${Math.random() * screenHeight}px`;
+                bird.style.left = `${Math.random() * screenWidth}px`;
+                const size = Math.random() * 40 + 20;
+                bird.style.width = `${size}px`;
+                bird.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`;
+                bird.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                preloader.appendChild(bird);
+            }
+        }
+
+        createBirds();
+
+        window.addEventListener('load', () => {
+            preloader.classList.add('preloader-hidden');
+            preloader.addEventListener('transitionend', () => {
+                preloader.remove();
+            });
+        });
+
+        // Icons
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Check for saved theme in localStorage
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function() {
+            // toggle icons inside button
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+
+            // if NOT set via local storage previously
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const openIcon = mobileMenuButton.querySelector('svg:first-child');
+        const closeIcon = mobileMenuButton.querySelector('svg:last-child');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            openIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        });
+    </script>
+
+</body>
+</html>
+</html>

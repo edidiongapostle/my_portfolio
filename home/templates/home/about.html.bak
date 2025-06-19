@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}About Me{% endblock %}
+
+{% block content %}
+<div class="bg-white overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-12 sm:p-12">
+        <div class="md:flex md:items-center md:justify-between">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    About Me
+                </h2>
+            </div>
+        </div>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-1 flex justify-center">
+                <div class="relative">
+                    <img class="h-48 w-48 rounded-full object-cover shadow-lg" src="https://via.placeholder.com/192" alt="A placeholder image of a person's profile picture.">
+                </div>
+            </div>
+            <div class="md:col-span-2">
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    Hello! I'm a passionate and creative web developer with a love for building beautiful, intuitive, and high-performing web applications. My journey into tech started with a fascination for how things work, and it has since grown into a full-fledged passion for software development.
+                </p>
+                <p class="mt-4 text-lg text-gray-600 leading-relaxed">
+                    I specialize in backend development with Django and have a strong foundation in frontend technologies like HTML, CSS, and JavaScript. I'm always eager to learn new things and take on challenging projects that push my skills to the next level.
+                </p>
+                <p class="mt-4 text-lg text-gray-600 leading-relaxed">
+                    When I'm not coding, you can find me exploring the outdoors, reading a good book, or experimenting with new recipes in the kitchen.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <h3 class="text-xl font-semibold text-gray-900">My Skills</h3>
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span class="inline-block bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">Python</span>
+                <span class="inline-block bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">Django</span>
+                <span class="inline-block bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">JavaScript</span>
+                <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">HTML5 & CSS3</span>
+                <span class="inline-block bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full">SQL</span>
+                <span class="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Git & GitHub</span>
+                <span class="inline-block bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">REST APIs</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

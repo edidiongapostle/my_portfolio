@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="px-4 py-12 sm:p-12">
+        <!-- Project Header -->
+        <div class="text-center">
+            {% if project.category %}
+            <a href="{% url 'project_list' %}?category={{ project.category.slug }}" class="text-base font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase">{{ project.category.name }}</a>
+            {% endif %}
+            <h1 class="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">{{ project.title }}</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">{{ project.description }}</p>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="mt-12 lg:flex lg:gap-x-12">
+            <!-- Detailed Description -->
+            <div class="lg:w-2/3 prose prose-indigo prose-lg text-gray-600 dark:text-gray-300 mx-auto">
+                {{ project.detailed_description|linebreaks }}
+            </div>
+
+            <!-- Sidebar with Tags -->
+            {% if project.tags.all %}
+            <div class="mt-12 lg:mt-0 lg:w-1/3">
+                <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white text-center">Technologies & Skills</h2>
+                    <div class="mt-4 flex justify-center flex-wrap gap-2">
+                        {% for tag in project.tags.all %}
+                            <a href="{% url 'project_list' %}?tag={{ tag.slug }}" class="inline-block bg-gray-200 dark:bg-gray-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500">#{{tag.name}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Screenshot Gallery -->
+        {% if project.screenshots.all %}
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white">Screenshots</h2>
+            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for screenshot in project.screenshots.all %}
+                <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
+                    <img src="{{ screenshot.image.url }}" alt="{{ screenshot.caption|default:project.title }}" class="w-full h-full object-cover">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="mt-12 flex justify-center items-center space-x-4">
+            {% if project.live_demo_link %}
+            <a href="{{ project.live_demo_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                View Live Demo
+            </a>
+            {% endif %}
+            <a href="{% url 'project_list' %}" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                &larr; Back to Projects
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

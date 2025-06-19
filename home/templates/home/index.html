@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            <span class="block">Hi, I'm MyName</span>
+            <span class="block text-indigo-600 dark:text-indigo-400">A Passionate Web Developer</span>
+        </h1>
+        <p class="mt-6 max-w-lg mx-auto text-xl text-gray-500 dark:text-gray-400">
+            I build modern, responsive, and user-friendly web applications. Welcome to my personal corner of the internet.
+        </p>
+        <div class="mt-8 max-w-md mx-auto flex flex-col items-center space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3 sm:justify-center md:mt-10">
+            <div class="rounded-md shadow">
+                <a href="{% url 'project_list' %}" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+                    View My Work
+                </a>
+            </div>
+            <div class="rounded-md shadow">
+                <a href="{% url 'contact' %}" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 dark:text-indigo-400 dark:bg-gray-800 dark:hover:bg-gray-700 md:py-4 md:text-lg md:px-10">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
