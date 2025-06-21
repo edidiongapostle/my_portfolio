@@ -18,9 +18,36 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps import GenericSitemap
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from projects.models import Project
+from blog.models import BlogPost
+from django.contrib.sitemaps.views import sitemap
+
+# Sitemap configuration
+sitemaps = {
+    'projects': GenericSitemap({
+        'queryset': Project.objects.all(),
+        'date_field': 'id',
+    }, priority=0.6),
+    'blog': GenericSitemap({
+        'queryset': BlogPost.objects.all(),
+        'date_field': 'published_date',
+    }, priority=0.5),
+}
+
+def robots_txt(request):
+    content = render_to_string('robots.txt', {
+        'sitemap_url': request.build_absolute_uri('/sitemap.xml')
+    })
+    return HttpResponse(content, content_type='text/plain')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', robots_txt, name='robots_txt'),
     path('', include('home.urls')),
     path('projects/', include('projects.urls')),
     path('blog/', include('blog.urls')),

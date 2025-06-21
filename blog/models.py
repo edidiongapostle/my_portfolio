@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from core.models import Category, Tag
+# from ckeditor.fields import RichTextField
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)

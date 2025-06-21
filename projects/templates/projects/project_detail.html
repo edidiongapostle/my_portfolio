@@ -2,6 +2,17 @@
 
 {% block title %}{{ project.title }}{% endblock %}
 
+{% block meta_description %}{{ project.description|truncatewords:25 }}{% endblock %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ project.title }}{% endblock %}
+{% block og_description %}{{ project.description|truncatewords:25 }}{% endblock %}
+{% block og_image %}{% if project.image %}{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% endif %}{% endblock %}
+
+{% block twitter_title %}{{ project.title }}{% endblock %}
+{% block twitter_description %}{{ project.description|truncatewords:25 }}{% endblock %}
+{% block twitter_image %}{% if project.image %}{{ request.scheme }}://{{ request.get_host }}{{ project.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% endif %}{% endblock %}
+
 {% block content %}
 <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
     <div class="px-4 py-12 sm:p-12">
@@ -42,13 +53,109 @@
             <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white">Screenshots</h2>
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for screenshot in project.screenshots.all %}
-                <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
-                    <img src="{{ screenshot.image.url }}" alt="{{ screenshot.caption|default:project.title }}" class="w-full h-full object-cover">
+                <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg cursor-pointer" onclick="openModal({{ forloop.counter0 }})">
+                    <img src="{{ screenshot.image.url }}" alt="{{ screenshot.caption|default:project.title }}" class="w-full h-full object-cover" loading="lazy">
                 </div>
                 {% endfor %}
             </div>
         </div>
+        <script>
+        // Prepare screenshot data for JS
+        const screenshots = [
+            {% for screenshot in project.screenshots.all %}
+            {
+                url: "{{ screenshot.image.url }}",
+                caption: "{{ screenshot.caption|escapejs|default:project.title }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        </script>
         {% endif %}
+
+        <!-- Modal for Lightbox -->
+        <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-80 flex flex-col items-center justify-center">
+            <span class="absolute top-4 right-8 text-white text-4xl cursor-pointer" onclick="closeModal()">&times;</span>
+            <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl px-2 py-1 bg-black bg-opacity-40 rounded-full" onclick="event.stopPropagation();prevImage();">&#8592;</button>
+            <div class="flex flex-col items-center">
+                <img id="lightboxImg" src="" alt="" class="max-h-[80vh] max-w-[90vw] rounded-lg shadow-2xl transition-transform duration-200" style="cursor: zoom-in;" onclick="toggleZoom(event)">
+                <div id="lightboxCaption" class="text-white text-center mt-4 text-lg font-semibold"></div>
+            </div>
+            <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl px-2 py-1 bg-black bg-opacity-40 rounded-full" onclick="event.stopPropagation();nextImage();">&#8594;</button>
+        </div>
+
+        <script>
+        let currentIndex = 0;
+        let zoomed = false;
+
+        function openModal(index) {
+            currentIndex = index;
+            updateModal();
+            document.getElementById('lightboxModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            resetZoom();
+        }
+        function updateModal() {
+            const img = document.getElementById('lightboxImg');
+            img.src = screenshots[currentIndex].url;
+            img.alt = screenshots[currentIndex].caption;
+            document.getElementById('lightboxCaption').innerText = screenshots[currentIndex].caption;
+            resetZoom();
+        }
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + screenshots.length) % screenshots.length;
+            updateModal();
+        }
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % screenshots.length;
+            updateModal();
+        }
+        function toggleZoom(event) {
+            const img = document.getElementById('lightboxImg');
+            zoomed = !zoomed;
+            if (zoomed) {
+                img.style.transform = 'scale(2)';
+                img.style.cursor = 'zoom-out';
+            } else {
+                resetZoom();
+            }
+            event.stopPropagation();
+        }
+        function resetZoom() {
+            const img = document.getElementById('lightboxImg');
+            zoomed = false;
+            img.style.transform = 'scale(1)';
+            img.style.cursor = 'zoom-in';
+        }
+        // Keyboard navigation
+        window.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('lightboxModal');
+            if (modal.classList.contains('hidden')) return;
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'Escape') closeModal();
+        });
+        // Close modal on background click
+        const modal = document.getElementById('lightboxModal');
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+        // Mouse wheel zoom
+        const img = document.getElementById('lightboxImg');
+        img.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                img.style.transform = 'scale(2)';
+                img.style.cursor = 'zoom-out';
+                zoomed = true;
+            } else {
+                resetZoom();
+            }
+        });
+        </script>
 
         <!-- Action Buttons -->
         <div class="mt-12 flex justify-center items-center space-x-4">
