@@ -1,3 +1,56 @@
-<p>You have a new contact form submission from {{ name }} ({{ email }}).</p>
-<p><strong>Message:</strong></p>
-<p>{{ message }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h2 {
+            color: #0056b3;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #555;
+        }
+        .message-box {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Preserves whitespace and line breaks */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>New Message from Your Portfolio Website</h2>
+        <div class="content">
+            <p><span class="field-label">From:</span> {{ name }}</p>
+            <p><span class="field-label">Email:</span> <a href="mailto:{{ email }}">{{ email }}</a></p>
+            <p><span class="field-label">Subject:</span> {{ subject }}</p>
+            <hr>
+            <p class="field-label">Message:</p>
+            <div class="message-box">
+                {{ message|linebreaksbr }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

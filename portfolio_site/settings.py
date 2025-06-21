@@ -135,6 +135,21 @@ else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'mediafiles'
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'your-app-password' # Your Gmail app password
+
+# This is the email address that will receive the contact form submissions.
+# Change this to your actual email address.
+ADMIN_EMAIL = 'your-email@gmail.com'
+
+# This is the 'from' address that emails will appear to be sent from.
+DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
