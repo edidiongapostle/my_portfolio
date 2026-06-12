@@ -11,13 +11,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key-for-development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['ahpo.pythonanywhere.com']  # PythonAnywhere domain
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]  # PythonAnywhere domain
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic', # Should be placed before 'django.contrib.staticfiles'
     'django.contrib.staticfiles',
-    'jazzmin',
     'cloudinary',
     'cloudinary_storage',
     'ckeditor',
@@ -184,3 +185,36 @@ CACHES = {
 # Cache settings for different content types
 CACHE_MIDDLEWARE_SECONDS = 300  # 5 minutes
 CACHE_MIDDLEWARE_KEY_PREFIX = 'portfolio'
+
+#Admin style settings for Jazzmin
+JAZZMIN_SETTINGS = {
+    "site_title": "Portfolio Admin",
+    "site_header": "My Portfolio",
+    "site_brand": "Admin Panel",
+
+    "welcome_sign": "Welcome back, Admin",
+
+    "copyright": "Umana Swift Logistics",
+
+    "search_model": ["auth.User"],
+
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index"},
+        {"name": "Website", "url": "/"},
+    ],
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+
+        "blog": "fas fa-blog",
+        "projects": "fas fa-briefcase",
+        "contact": "fas fa-envelope",
+        "home": "fas fa-home",
+        "core": "fas fa-cogs",
+    },
+}
